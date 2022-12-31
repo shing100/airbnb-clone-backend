@@ -11,6 +11,7 @@ packages = [{include = "airbnb_clone_backend"}]
 python = "^3.8"
 django = "^4.1.4"
 verbose = "^1.0.0"
+black = "^22.12.0"
 
 
 [build-system]
