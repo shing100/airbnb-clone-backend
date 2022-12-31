@@ -1,7 +1,8 @@
 from django.db import models
+from common.models import CommonModel
 
 
-class Room(models.Model):
+class Room(CommonModel):
 
     """Room Model Definition"""
 
@@ -38,7 +39,7 @@ class Room(models.Model):
     )
 
 
-class Amenity(models.Model):
+class Amenity(CommonModel):
 
     """Amenity Definiton"""
 
