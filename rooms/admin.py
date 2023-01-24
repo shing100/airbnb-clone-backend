@@ -9,8 +9,8 @@ class RoomAdmin(admin.ModelAdmin):
         "price",
         "kind",
         "owner",
+        "total_amenities",
         "created_at",
-        "updated_at",
     )
 
     list_filter = (
