@@ -24,6 +24,15 @@ GET PUT DELETE /rooms/1/bookings/2
 GET POST /amenities
 GET PUT DELETE /amenities/1
 
+### Users
+
+GET PUT /me
+POST /users
+GET /users/username
+POST /users/log-in
+POST /users/change-password
+POST /users/github
+
 ### Experiences
 
 GET POST /experiences
