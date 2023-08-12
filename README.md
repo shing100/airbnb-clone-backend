@@ -1170,6 +1170,11 @@ def get_is_owner(self, room):
 - `Public`
 - `User`의 경우, `TinyUserSerializer`를 만들어 `avatar`와 `name`만 드러낼 수 있다
 
+### 6. GraphQL
+
+- poetry add strawberry-graphql-django
+- poetry add 'strawberry-graphql[debug-server]'
+
 ### Categories
 
 GET POST /categories

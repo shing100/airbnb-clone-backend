@@ -14,6 +14,8 @@ verbose = "^1.0.0"
 black = "^22.12.0"
 pillow = "^9.3.0"
 djangorestframework = "^3.14.0"
+strawberry-graphql = {extras = ["debug-server"], version = "^0.203.0"}
+strawberry-graphql-django = "^0.16.0"
 
 
 [build-system]
