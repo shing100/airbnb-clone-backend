@@ -8,9 +8,15 @@ class ExperienceAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "price",
-        "start",
-        "end",
-        "created_at",
+        "event_start",
+        "event_end",
+        "event_duration",
+        "host",
+    )
+    list_filter = (
+        "country",
+        "city",
+        "price",
     )
 
 
@@ -19,6 +25,6 @@ class PerkAdmin(admin.ModelAdmin):
 
     list_display = (
         "name",
+        "description",
         "details",
-        "explanation",
     )

@@ -1,66 +1,71 @@
+from datetime import timedelta
 from django.db import models
-from common.models import CommonModel
+from common.models import TimeStampedModel
 
 
-class Experience(CommonModel):
+class Experience(TimeStampedModel):
 
-    """Experience Model Definiiton"""
+    """ Experience Model Definition """
 
-    country = models.CharField(
-        max_length=50,
-        default="한국",
-    )
-    city = models.CharField(
-        max_length=80,
-        default="서울",
-    )
-    name = models.CharField(
-        max_length=250,
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField()
+    country = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    address = models.CharField(max_length=250)
+    price = models.PositiveIntegerField()
+    event_start = models.TimeField()
+    event_end = models.TimeField()
+    event_duration = models.DurationField(
+        default=timedelta(hours=2),
     )
     host = models.ForeignKey(
         "users.User",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="experiences",
+        null=True,
+        blank=True,
     )
-    price = models.PositiveIntegerField()
-    address = models.CharField(
-        max_length=250,
-    )
-    start = models.TimeField()
-    end = models.TimeField()
-    description = models.TextField()
     perks = models.ManyToManyField(
-        "experiences.Perk",
+        "Perk",
         related_name="experiences",
     )
     category = models.ForeignKey(
         "categories.Category",
-        null=True,
-        blank=True,
         on_delete=models.SET_NULL,
         related_name="experiences",
+        null=True,
+        blank=True,
     )
 
-    def __str__(self) -> str:
+    @property
+    def total_reviews(experience):
+        return experience.reviews.count()
+
+    def average_ratings(experience):
+        reviews = experience.reviews.count()
+        if reviews == 0:
+            return 0
+        else:
+            total_ratings = 0
+            for review in experience.reviews.all().values("rating"):
+                total_ratings += review["rating"]
+            return round(total_ratings / reviews, 2)
+
+    def __str__(self):
         return self.name
 
 
-class Perk(CommonModel):
+class Perk(TimeStampedModel):
 
-    """What is included on an Experience"""
+    """ Perk Model Definitioin """
 
-    name = models.CharField(
-        max_length=100,
-    )
+    name = models.CharField(max_length=50)
+    description = models.TextField(null=True, blank=True)
     details = models.CharField(
         max_length=250,
         blank=True,
         default="",
     )
-    explanation = models.TextField(
-        blank=True,
-        default="",
-    )
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name

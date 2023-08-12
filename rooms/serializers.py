@@ -1,60 +1,86 @@
-from rest_framework import serializers
-from .models import Amenity, Room
-from users.serializers import TinyUserSerializer
-from reviews.serializers import ReviewSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from .models import Room, Amenity
+from common.serializers import TinyUserSerializer
 from categories.serializers import CategorySerializer
+from medias.models import Photo
 from medias.serializers import PhotoSerializer
+from reviews.serializers import ReviewSerializer
 from wishlists.models import Wishlist
 
 
-class AmenitySerializer(serializers.ModelSerializer):
+class AmenitySerializer(ModelSerializer):
     class Meta:
         model = Amenity
-        fields = (
-            "name",
-            "description",
-        )
+        fields = "__all__"
 
 
-class RoomDetailSerializer(serializers.ModelSerializer):
+class HostRoomSerializer(ModelSerializer):
 
-    owner = TinyUserSerializer(read_only=True)
-    amenities = AmenitySerializer(
-        read_only=True,
-        many=True,
-    )
-    category = CategorySerializer(
-        read_only=True,
-    )
-    rating = serializers.SerializerMethodField()
-    is_owner = serializers.SerializerMethodField()
-    is_liked = serializers.SerializerMethodField()
-    photos = PhotoSerializer(many=True, read_only=True)
+    preview_photo = SerializerMethodField()
+    rating = SerializerMethodField()
+    total_reviews = SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = "__all__"
+        fields = (
+            "pk",
+            "name",
+            "preview_photo",
+            "kind",
+            "rating",
+            "total_reviews",
+        )
 
     def get_rating(self, room):
-        return room.rating()
+        return room.average_ratings()
 
-    def get_is_owner(self, room):
-        request = self.context["request"]
-        return room.owner == request.user
+    def get_total_reviews(self, room):
+        return room.total_reviews()
+
+    def get_preview_photo(self, room):
+        try:
+            preview_photo = Photo.objects.get(
+                room=room,
+                is_thumbnail=True,
+            )
+        except Photo.DoesNotExist:
+            return
+        return PhotoSerializer(preview_photo).data
+
+
+class WishlistRoomSerializer(ModelSerializer):
+
+    photos = PhotoSerializer(
+        read_only=True,
+        many=True,
+    )
+    is_liked = SerializerMethodField()
+
+    class Meta:
+        model = Room
+        fields = (
+            "pk",
+            "name",
+            "price",
+            "rooms",
+            "toilets",
+            "photos",
+            "is_liked",
+        )
 
     def get_is_liked(self, room):
         request = self.context["request"]
         return Wishlist.objects.filter(
-            user=request.user,
+            owner=request.user,
             rooms__pk=room.pk,
         ).exists()
 
 
-class RoomListSerializer(serializers.ModelSerializer):
+class RoomListSerializer(ModelSerializer):
 
-    rating = serializers.SerializerMethodField()
-    is_owner = serializers.SerializerMethodField()
-    photos = PhotoSerializer(many=True, read_only=True)
+    rating = SerializerMethodField()
+    is_owner = SerializerMethodField()
+    is_liked = SerializerMethodField()
 
     class Meta:
         model = Room
@@ -66,12 +92,53 @@ class RoomListSerializer(serializers.ModelSerializer):
             "price",
             "rating",
             "is_owner",
-            "photos",
+            "is_liked",
         )
 
     def get_rating(self, room):
-        return room.rating()
+        return room.average_ratings()
 
     def get_is_owner(self, room):
         request = self.context["request"]
         return room.owner == request.user
+
+    def get_is_liked(self, room):
+        request = self.context["request"]
+        return Wishlist.objects.filter(
+            owner=request.user,
+            rooms__pk=room.pk,
+        ).exists()
+
+
+class RoomDetailSerializer(ModelSerializer):
+
+    owner = TinyUserSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+    reviews = ReviewSerializer(
+        read_only=True,
+        many=True,
+    )
+    amenities = AmenitySerializer(
+        read_only=True,
+        many=True,
+    )
+    photos = PhotoSerializer(
+        read_only=True,
+        many=True,
+    )
+    total_reviews = SerializerMethodField()
+    is_liked = SerializerMethodField()
+
+    class Meta:
+        model = Room
+        fields = "__all__"
+
+    def get_total_reviews(self, room):
+        return room.total_reviews()
+
+    def get_is_liked(self, room):
+        request = self.context["request"]
+        return Wishlist.objects.filter(
+            owner=request.user,
+            rooms__pk=room.pk,
+        ).exists()

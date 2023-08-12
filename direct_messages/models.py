@@ -1,8 +1,8 @@
 from django.db import models
-from common.models import CommonModel
+from common.models import TimeStampedModel
 
 
-class ChattingRoom(CommonModel):
+class ChattingRoom(TimeStampedModel):
 
     """Room Model Definition"""
 
@@ -15,7 +15,7 @@ class ChattingRoom(CommonModel):
         return "Chatting Room"
 
 
-class Message(CommonModel):
+class Message(TimeStampedModel):
 
     """Message Model Definition"""
 

@@ -1,39 +1,32 @@
+from datetime import datetime
 from django.contrib import admin
-from .models import Review
+from . import models
+from .filters import PopularityFilter
 
 
-class WordFilter(admin.SimpleListFilter):
-
-    title = "Filter by words!"
-
-    parameter_name = "word"
-
-    def lookups(self, request, model_admin):
-        return [
-            ("good", "Good"),
-            ("great", "Great"),
-            ("awesome", "Awesome"),
-        ]
-
-    def queryset(self, request, reviews):
-        word = self.value()
-        if word:
-            return reviews.filter(payload__contains=word)
-        else:
-            reviews
-
-
-@admin.register(Review)
+@admin.register(models.Review)
 class ReviewAdmin(admin.ModelAdmin):
 
     list_display = (
         "__str__",
+        "event",
+        "booking_date",
         "payload",
+        "created_at",
     )
     list_filter = (
-        WordFilter,
+        PopularityFilter,
         "rating",
         "user__is_host",
         "room__category",
-        "room__pet_friendly",
     )
+
+    def event(self, review):
+        return f"{review.category}: {review.event_name}"
+
+    def booking_date(self, review):
+        if review.room and review.booking:
+            return f"{review.booking.check_in} ~ {review.booking.check_out}"
+        elif review.experience and review.booking:
+            return review.booking.experience_time
+        return None

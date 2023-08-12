@@ -1,16 +1,51 @@
-from rest_framework import serializers
-from users.serializers import TinyUserSerializer
+from rest_framework.serializers import ModelSerializer
 from .models import Review
+from common.serializers import TinyUserSerializer
+from common.serializers import TinyRoomSerializer
+from common.serializers import TinyExperienceSerializer
+from bookings.serializers import PublicBookingSerializer
 
 
-class ReviewSerializer(serializers.ModelSerializer):
+class UserReviewSerializer(ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = (
+            "payload",
+            "rating",
+            "created_at",
+        )
+
+
+class HostReviewSerializer(ModelSerializer):
 
     user = TinyUserSerializer(read_only=True)
+    room = TinyRoomSerializer(read_only=True)
+    experience = TinyExperienceSerializer(read_only=True)
 
     class Meta:
         model = Review
         fields = (
             "user",
+            "room",
+            "experience",
             "payload",
             "rating",
+            "created_at",
+        )
+
+
+class ReviewSerializer(ModelSerializer):
+
+    user = TinyUserSerializer(read_only=True)
+    booking = PublicBookingSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = (
+            "user",
+            "booking",
+            "payload",
+            "rating",
+            "created_at",
         )

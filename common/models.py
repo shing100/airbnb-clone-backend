@@ -1,10 +1,9 @@
 from django.db import models
-from django.utils import timezone
 
 
-class CommonModel(models.Model):
+class TimeStampedModel(models.Model):
 
-    """Common Model Definition"""
+    """ TimeStamped Model Definition """
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

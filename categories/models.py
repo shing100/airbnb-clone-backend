@@ -1,22 +1,22 @@
 from django.db import models
-from common.models import CommonModel
+from common.models import TimeStampedModel
 
 
-class Category(CommonModel):
+class Category(TimeStampedModel):
 
-    """Room or Experience Category"""
+    """ Room or Experience Category Model Defintion """
 
     class CategoryKindChoices(models.TextChoices):
-        ROOMS = "rooms", "Rooms"
-        EXPERIENCES = "experiences", "Experiences"
+        ROOM = ("rooms", "Rooms")
+        EXPERIENCE = ("experiences", "Experiences")
 
     name = models.CharField(max_length=50)
     kind = models.CharField(
-        max_length=15,
+        max_length=20,
         choices=CategoryKindChoices.choices,
     )
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"{self.kind.title()}: {self.name}"
 
     class Meta:
