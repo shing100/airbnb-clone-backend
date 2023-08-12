@@ -33,13 +33,13 @@ THIRD_PARTY_APPS = [
 
 CUSTOM_APPS = [
     "common.apps.CommonConfig",
-    "users.apps.UsersConfig",
     "rooms.apps.RoomsConfig",
     "experiences.apps.ExperiencesConfig",
     "categories.apps.CategoriesConfig",
     "reviews.apps.ReviewsConfig",
     "wishlists.apps.WishlistsConfig",
     "bookings.apps.BookingsConfig",
+    "users.apps.UsersConfig",
     "medias.apps.MediasConfig",
     "direct_messages.apps.DirectMessagesConfig",
 ]
