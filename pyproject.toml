@@ -17,6 +17,7 @@ djangorestframework = "^3.14.0"
 strawberry-graphql = {extras = ["debug-server"], version = "^0.203.0"}
 strawberry-graphql-django = "^0.16.0"
 pyjwt = "^2.8.0"
+django-environ = "^0.10.0"
 
 
 [build-system]
