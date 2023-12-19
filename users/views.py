@@ -234,6 +234,7 @@ class LogIn(APIView):
 class LogOut(APIView):
 
     permission_classes = [IsAuthenticated]
+    print("logout")
 
     def post(self, request):
         logout(request)
