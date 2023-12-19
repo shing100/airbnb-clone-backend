@@ -23,19 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-3)nst418918z6=19!vnw)yjd$j85p5=y7++k4o^mdpkqd4ci+y"
+SECRET_KEY = env("SECREY_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "strawberry.django",
+    "corsheaders"
 ]
 
 CUSTOM_APPS = [
@@ -70,6 +70,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # cors
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -164,3 +165,11 @@ REST_FRAMEWORK = {
         "config.authentication.JWTAuthentication",
     ]
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8080",
+]
+
+CORS_ALLOWED_CREDENTIALS = True

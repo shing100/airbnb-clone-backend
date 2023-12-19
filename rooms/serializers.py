@@ -81,6 +81,7 @@ class RoomListSerializer(ModelSerializer):
     rating = SerializerMethodField()
     is_owner = SerializerMethodField()
     is_liked = SerializerMethodField()
+    photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Room
@@ -93,6 +94,7 @@ class RoomListSerializer(ModelSerializer):
             "rating",
             "is_owner",
             "is_liked",
+            "photos",
         )
 
     def get_rating(self, room):
@@ -104,10 +106,12 @@ class RoomListSerializer(ModelSerializer):
 
     def get_is_liked(self, room):
         request = self.context["request"]
-        return Wishlist.objects.filter(
-            owner=request.user,
-            rooms__pk=room.pk,
-        ).exists()
+        if request.user.is_authenticated:
+            return Wishlist.objects.filter(
+                owner=request.user,
+                rooms__pk=room.pk,
+            ).exists()
+        return False
 
 
 class RoomDetailSerializer(ModelSerializer):
@@ -138,7 +142,9 @@ class RoomDetailSerializer(ModelSerializer):
 
     def get_is_liked(self, room):
         request = self.context["request"]
-        return Wishlist.objects.filter(
-            owner=request.user,
-            rooms__pk=room.pk,
-        ).exists()
+        if request.user.is_authenticated:
+            return Wishlist.objects.filter(
+                owner=request.user,
+                rooms__pk=room.pk,
+            ).exists()
+        return False
