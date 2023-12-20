@@ -227,9 +227,9 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            return Response({"ok": "Welcome!"})
+            return Response(status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Wrong Password"})
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogOut(APIView):
