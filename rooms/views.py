@@ -127,7 +127,7 @@ class RoomList(APIView, ListPagination):
                 raise ParseError("Amenity Not Found")
             except Exception as e:
                 raise ParseError(e)
-            serializer = RoomDetailSerializer(new_rooms)
+            serializer = RoomDetailSerializer(new_rooms, context={"request": request})
             return Response(serializer.data)
         else:
             return Response(
