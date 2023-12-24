@@ -10,6 +10,7 @@ urlpatterns = [
     path("<int:pk>/photos/<int:photo_pk>",
          views.RoomThumbnailPhotoSelect.as_view()),
     path("<int:pk>/bookings", views.RoomBookings.as_view()),
+    path("<int:pk>/bookings/check", views.RoomBookings.as_view()),
     path("amenities/", views.AmenityList.as_view()),
     path("amenities/<int:pk>", views.AmenityDetail.as_view()),
 ]

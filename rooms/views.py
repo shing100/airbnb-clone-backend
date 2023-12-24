@@ -392,3 +392,8 @@ class RoomThumbnailPhotoSelect(APIView):
         photo.is_thumbnail = True
         photo.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class RoomBookingsCheck(APIView):
+    def post(self, request):
+        return Response(status=status.HTTP_200_OK)
